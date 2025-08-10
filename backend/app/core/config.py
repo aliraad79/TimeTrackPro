@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     DEBUG: bool = False
     
     # Database
-    DATABASE_URL: str = "postgresql://user:password@localhost/timetrack"
+    DATABASE_URL: str = "postgresql://timetrack_user:timetrack_password@localhost/timetrack"
     
     # Redis
     REDIS_URL: str = "redis://localhost:6379"

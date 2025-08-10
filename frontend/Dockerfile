@@ -14,5 +14,5 @@ COPY . .
 # Expose port
 EXPOSE 3000
 
-# Run the application
-CMD ["npm", "run", "dev"]
+# Run the application with host binding
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

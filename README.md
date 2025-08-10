@@ -99,7 +99,7 @@ Create `.env` files in both backend and frontend directories:
 
 ### Backend (.env)
 ```
-DATABASE_URL=postgresql://user:password@localhost/timetrack
+DATABASE_URL=postgresql://timetrack_user:timetrack_password@localhost/timetrack
 REDIS_URL=redis://localhost:6379
 SECRET_KEY=your-secret-key
 JWT_ALGORITHM=HS256
