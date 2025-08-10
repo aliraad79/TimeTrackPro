@@ -6,7 +6,7 @@ from app.models.vacation_request import VacationStatus, VacationType
 class VacationRequestBase(BaseModel):
     start_date: datetime
     end_date: datetime
-    vacation_type: VacationType = VacationType.VACATION
+    vacation_type: VacationType = VacationType.PERSONAL_DAY
     reason: str
     notes: Optional[str] = None
 
