@@ -5,8 +5,7 @@ import uvicorn
 
 from app.core.config import settings
 from app.api.v1.api import api_router
-from app.core.database import engine
-from app.models import Base
+from app.core.database import Base, engine
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -22,7 +21,7 @@ app = FastAPI(
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.ALLOWED_HOSTS,
+    allow_origins=settings.allowed_hosts_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -31,7 +30,7 @@ app.add_middleware(
 # Trusted host middleware
 app.add_middleware(
     TrustedHostMiddleware,
-    allowed_hosts=settings.ALLOWED_HOSTS
+    allowed_hosts=settings.allowed_hosts_list
 )
 
 # Include API router

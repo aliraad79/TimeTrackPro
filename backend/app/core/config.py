@@ -18,14 +18,19 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
-    # CORS
-    ALLOWED_HOSTS: List[str] = ["http://localhost:3000", "http://localhost:5173"]
+    # CORS - Parse as comma-separated string from env
+    ALLOWED_HOSTS: str = "http://localhost:3000,http://localhost:5173"
     
     # Location Settings
     DEFAULT_RADIUS_METERS: int = 100  # Default geofence radius
     
     # Google Maps API (for geocoding)
     GOOGLE_MAPS_API_KEY: Optional[str] = None
+    
+    @property
+    def allowed_hosts_list(self) -> List[str]:
+        """Convert ALLOWED_HOSTS string to list"""
+        return [host.strip() for host in self.ALLOWED_HOSTS.split(",") if host.strip()]
     
     class Config:
         env_file = ".env"
