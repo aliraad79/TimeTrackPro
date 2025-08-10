@@ -5,6 +5,7 @@ from app.core.database import get_db
 from app.core.auth import get_current_active_user, require_manager
 from app.models.location import Location
 from app.schemas.location import LocationCreate, LocationUpdate, LocationResponse
+from app.models.user import User
 
 router = APIRouter()
 
