@@ -25,14 +25,14 @@ REDIS_URL=redis://localhost:6379
 SECRET_KEY=your-secret-key-change-in-production
 JWT_ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
-ALLOWED_HOSTS=http://localhost:3000,http://localhost:5173
+ALLOWED_HOSTS=http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173
 EOF
 fi
 
 if [ ! -f "frontend/.env" ]; then
     echo "📝 Creating frontend .env file..."
     cat > frontend/.env << EOF
-VITE_API_URL=http://localhost:8000
+VITE_API_URL=http://localhost:8000/api/v1
 EOF
 fi
 

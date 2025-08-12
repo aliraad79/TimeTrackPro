@@ -83,31 +83,28 @@ export interface ClockOutRequest {
   notes?: string;
 }
 
+export type VacationType = 'sick_leave' | 'personal_day' | 'other';
+
 // Vacation Request types
 export interface VacationRequest {
   id: number;
   user_id: number;
-  start_date: string;
-  end_date: string;
-  vacation_type: 'vacation' | 'sick_leave' | 'personal_day' | 'other';
+  date: string;
+  vacation_type: VacationType;
   status: 'pending' | 'approved' | 'rejected' | 'cancelled';
   reason: string;
-  notes?: string;
   approved_by?: number;
   approved_at?: string;
   rejection_reason?: string;
-  duration_days: number;
   created_at: string;
   updated_at?: string;
   user?: User;
 }
 
 export interface VacationRequestCreate {
-  start_date: string;
-  end_date: string;
-  vacation_type: 'vacation' | 'sick_leave' | 'personal_day' | 'other';
+  date: string;
+  vacation_type: VacationType;
   reason: string;
-  notes?: string;
 }
 
 // API Response types

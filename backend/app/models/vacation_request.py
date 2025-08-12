@@ -26,7 +26,7 @@ class VacationRequest(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
     # Request details
-    data = Column(DateTime(timezone=True), nullable=False)
+    date = Column(DateTime(timezone=True), nullable=False)
     vacation_type = Column(Enum(VacationType), default=VacationType.PERSONAL_DAY)
     status = Column(Enum(VacationStatus), default=VacationStatus.PENDING)
 

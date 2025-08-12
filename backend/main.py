@@ -24,7 +24,7 @@ app.add_middleware(
 )
 
 # Trusted host middleware
-app.add_middleware(TrustedHostMiddleware, allowed_hosts=settings.allowed_hosts_list)
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=settings.trusted_hosts_list)
 
 # Include API router
 app.include_router(api_router, prefix="/api/v1")

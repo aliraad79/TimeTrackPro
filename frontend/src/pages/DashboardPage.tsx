@@ -126,7 +126,7 @@ const DashboardPage: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium text-gray-900">
-                      {new Date(request.start_date).toLocaleDateString()} - {new Date(request.end_date).toLocaleDateString()}
+                      {new Date(request.date).toLocaleDateString()}
                     </p>
                     <p className="text-sm text-gray-500">{request.reason}</p>
                   </div>

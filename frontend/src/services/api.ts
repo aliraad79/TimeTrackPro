@@ -1,9 +1,9 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import { 
-  User, 
-  UserCreate, 
-  UserLogin, 
-  Location, 
+import {
+  User,
+  UserCreate,
+  UserLogin,
+  Location,
   LocationCreate,
   TimeEntry,
   ClockInRequest,
