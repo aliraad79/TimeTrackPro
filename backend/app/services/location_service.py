@@ -80,6 +80,7 @@ class LocationService:
             return False, "Location is not active"
         
         if not LocationService.is_within_geofence(user_lat, user_lng, location):
+            print(user_lat, user_lng, location)
             distance = LocationService.get_distance_to_location(user_lat, user_lng, location)
             return False, f"You are {distance:.0f}m away from the work area"
         

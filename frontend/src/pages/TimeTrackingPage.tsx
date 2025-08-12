@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { apiService } from "../services/api";
-import { Location } from "../types";
+import { ClockInRequest, ClockOutRequest, Location } from "../types";
 
 const TimeTrackingPage: React.FC = () => {
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(
@@ -37,8 +37,8 @@ const TimeTrackingPage: React.FC = () => {
       //   }
       // );
       setUserLocation({
-        lat: 40.741895,
-        lng: -73.989308,
+        lat: 40.7128,
+        lng: -74.006,
       });
       setLocationError("");
     } else {
@@ -49,38 +49,49 @@ const TimeTrackingPage: React.FC = () => {
   // Queries
   const { data: locations = [], isLoading: locationsLoading } = useQuery({
     queryKey: ["locations"],
-    queryFn: apiService.getLocations,
+    queryFn: () => apiService.getLocations(),
+    enabled: true,
   });
 
   const { data: activeEntry, isLoading: activeEntryLoading } = useQuery({
     queryKey: ["activeEntry"],
-    queryFn: apiService.getMyActiveEntry,
+    queryFn: () => apiService.getMyActiveEntry(),
     retry: false,
   });
 
   const { data: timeEntries = [], isLoading: entriesLoading } = useQuery({
     queryKey: ["timeEntries"],
-    queryFn: apiService.getMyTimeEntries,
+    queryFn: () => apiService.getMyTimeEntries(),
   });
 
   // Mutations
   const clockInMutation = useMutation({
-    mutationFn: apiService.clockIn,
+    mutationFn: (data: ClockInRequest) => apiService.clockIn(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["activeEntry"] });
-      queryClient.invalidateQueries({ queryKey: ["timeEntries"] });
+      queryClient.invalidateQueries({
+        queryKey: ["activeEntry"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["timeEntries"],
+      });
       toast.success("Successfully clocked in!");
     },
     onError: (error: any) => {
+      console.log("HAN");
+      console.log(error);
       toast.error(error.response?.data?.detail || "Failed to clock in");
     },
   });
 
   const clockOutMutation = useMutation({
-    mutationFn: apiService.clockOut,
+    mutationFn: (data: ClockOutRequest) => apiService.clockOut(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["activeEntry"] });
-      queryClient.invalidateQueries({ queryKey: ["timeEntries"] });
+      queryClient.invalidateQueries({
+        queryKey: ["activeEntry"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["timeEntries"],
+      });
       toast.success("Successfully clocked out!");
     },
     onError: (error: any) => {

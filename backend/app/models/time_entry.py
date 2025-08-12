@@ -20,10 +20,16 @@ class TimeEntry(Base):
     type = Column(Enum(TimeEntryType), nullable=False, default=TimeEntryType.CLOCK_IN)
 
     # Clock in details
-    time = Column(DateTime(timezone=True), nullable=False)
-    latitude = Column(Float, nullable=False)
-    longitude = Column(Float, nullable=False)
-    accuracy = Column(Float, nullable=True)
+    clock_in_time = Column(DateTime(timezone=True), nullable=False)
+    clock_in_latitude = Column(Float, nullable=False)
+    clock_in_longitude = Column(Float, nullable=False)
+    clock_in_accuracy = Column(Float, nullable=True)
+
+    # Clock out details
+    clock_out_time = Column(DateTime(timezone=True), nullable=True)
+    clock_out_latitude = Column(Float, nullable=True)
+    clock_out_longitude = Column(Float, nullable=True)
+    clock_out_accuracy = Column(Float, nullable=True)
 
     # Additional info
     notes = Column(Text, nullable=True)
@@ -33,6 +39,11 @@ class TimeEntry(Base):
     # Relationships
     user = relationship("User", back_populates="time_entries")
     location = relationship("Location", back_populates="time_entries")
+
+    @property
+    def is_active(self):
+        """Check if the time entry is currently active (clocked in but not out)"""
+        return self.clock_in_time is not None and self.clock_out_time is None
 
     def __repr__(self):
         return f"<TimeEntry(id={self.id}, user_id={self.user_id}, type='{self.type}')>"

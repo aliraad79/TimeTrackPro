@@ -39,6 +39,10 @@ fi
 echo "✅ Environment files created"
 
 # Start the services
+echo "🐳 Removing past volumes"
+docker volume rm amir_postgres_data
+
+# Start the services
 echo "🐳 Starting services with Docker Compose..."
 docker compose up -d postgres redis
 

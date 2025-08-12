@@ -5,11 +5,8 @@ from app.core.auth import get_current_active_user, require_manager
 from app.core.database import get_db
 from app.models.time_entry import TimeEntry
 from app.models.user import User
-from app.schemas.time_entry import (
-    ClockInRequest,
-    TimeEntryResponse,
-    TimeEntryUpdate,
-)
+from app.schemas.time_entry import (ClockInRequest, ClockOutRequest,
+                                    TimeEntryResponse, TimeEntryUpdate)
 from app.services.location_service import LocationService
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -17,7 +14,7 @@ from sqlalchemy.orm import Session
 router = APIRouter()
 
 
-@router.post("/clock", response_model=TimeEntryResponse)
+@router.post("/clock-in", response_model=TimeEntryResponse)
 async def clock_in(
     request: ClockInRequest,
     current_user: User = Depends(get_current_active_user),
@@ -52,10 +49,10 @@ async def clock_in(
     time_entry = TimeEntry(
         user_id=current_user.id,
         location_id=request.location_id,
-        time=datetime.utcnow(),
-        latitude=request.latitude,
-        longitude=request.longitude,
-        accuracy=request.accuracy,
+        clock_in_time=datetime.utcnow(),
+        clock_in_latitude=request.latitude,
+        clock_in_longitude=request.longitude,
+        clock_in_accuracy=request.accuracy,
         notes=request.notes,
     )
 
@@ -64,6 +61,45 @@ async def clock_in(
     db.refresh(time_entry)
 
     return time_entry
+
+
+@router.post("/clock-out", response_model=TimeEntryResponse)
+async def clock_out(
+    request: ClockOutRequest,
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db),
+):
+    """Clock out from current shift"""
+    # Find active time entry
+    active_entry = (
+        db.query(TimeEntry)
+        .filter(
+            TimeEntry.user_id == current_user.id, TimeEntry.clock_out_time.is_(None)
+        )
+        .first()
+    )
+
+    if not active_entry:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="You are not currently clocked in",
+        )
+
+    # Update time entry
+    active_entry.clock_out_time = datetime.utcnow()
+    active_entry.clock_out_latitude = request.latitude
+    active_entry.clock_out_longitude = request.longitude
+    active_entry.clock_out_accuracy = request.accuracy
+
+    if request.notes:
+        active_entry.notes = (
+            active_entry.notes or ""
+        ) + f"\nClock out notes: {request.notes}"
+
+    db.commit()
+    db.refresh(active_entry)
+
+    return active_entry
 
 
 @router.get("/my-entries", response_model=List[TimeEntryResponse])
